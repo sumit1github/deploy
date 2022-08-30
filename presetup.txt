@@ -48,5 +48,11 @@ setup nginx
 sudo service nginx start
 sudo nano /etc/nginx/sites-available/project_name
 copy paste the code from nginx config file
-  
+
+cd /etc/nginx/sites-enabled/ 
+sudo ln -s /etc/nginx/sites-available/project_name
+
+sudo nginx -t #check nginx syntex error
+sudo ufw allow 'Nginx Full'
+sudo systemtl restart nginx
 
