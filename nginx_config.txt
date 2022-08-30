@@ -1,0 +1,19 @@
+ server {
+    listen 80;
+    server_name 67.205.186.66;
+
+    location /media  {
+        alias /home/sumit/testing/media;  # your Django project's media files - amend as required
+    }
+
+    location /static {
+        alias /home/sumit/testing/staticfiles; # your Django project's static files - amend as required
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+
+    location / {
+        proxy_pass http://67.205.186.66:8000;
+    }
+}
+
