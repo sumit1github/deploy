@@ -1,0 +1,32 @@
+sudo apt-get update
+sudo apt-get install git
+sudo apt-get install python3-pip libpq-dev postgresql postgresql-contrib nginx
+cd /home/
+
+#creating ubunntu user
+sudo adduser user_name
+groups user_name # addinng user in the sudo groups
+
+# creatng postgres user
+sudo -u postgres psql
+CREATE DATABASE myproject;
+CREATE USER myprojectuser WITH PASSWORD 'password';
+ALTER ROLE myprojectuser SET client_encoding TO 'utf8';
+ALTER ROLE myprojectuser SET default_transaction_isolation TO 'read committed';
+ALTER ROLE myprojectuser SET timezone TO 'UTC';
+GRANT ALL PRIVILEGES ON DATABASE myproject TO myprojectuser;
+\q
+
+# creating virtual env and import project
+pip install virtualenv
+python3 -m venv env
+git clone
+source env/bin/activate
+cd project
+pip install -r requirments.txt
+
+# setup gunicorn 
+pip install gunicorn
+mkdir conf #creatign a conf folder where manage.py is located
+sudo nano conf/gunicorn_config.py
+@@ see the gunicornsetup file
