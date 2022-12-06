@@ -1,9 +1,73 @@
-# command = '/home/sumit/Desktop/my project/testing/env/gunicorn'
-# pythonpath= '/home/sumit/Desktop/my project/testing/env'
-# bind='192.168.29.82:8000'
-# workers=3
++++++++++++++++++++++++++++++ creating socket file ++++++++++++++++++++++++++++++++
+sudo nano /etc/systemd/system/gunicorn.socket
 
-command = '/home/sumit/env/gunicorn'
-pythonpath= '/home/sumit/env'
-bind='67.205.186.66:8000'
-workers=3
+------------
+[Unit]
+Description=gunicorn socket
+
+[Socket]
+ListenStream=/run/gunicorn.sock
+
+[Install]
+WantedBy=sockets.target
+--------------
+
+************************** creating service file ******************************
+sudo nano /etc/systemd/system/gunicorn.service
+------------
+
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=ubuntu        # for digital ocen create a new user
+Group=www-data
+WorkingDirectory=/home/user_name/myprojectdir/project_name
+ExecStart=/home/sammy/myprojectdir/env/bin/gunicorn \
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/run/gunicorn.sock \
+          project_name.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
+
+-------------
+++++++++++++++++++++++++++++++++++ run commands +++++++++++++++++++++
+1. sudo systemctl start gunicorn.socket
+2. sudo systemctl enable gunicorn.socket
+
+3. sudo systemctl status gunicorn.socket
+
+------- output-------------
+Output
+● gunicorn.socket - gunicorn socket
+     Loaded: loaded (/etc/systemd/system/gunicorn.socket; enabled; vendor prese>
+     Active: active (listening) since Fri 2020-06-26 17:53:10 UTC; 14s ago
+   Triggers: ● gunicorn.service
+     Listen: /run/gunicorn.sock (Stream)
+      Tasks: 0 (limit: 1137)
+     Memory: 0B
+     CGroup: /system.slice/gunicorn.socket
+----------------------------
+
+4. file /run/gunicorn.sock
+----------------------
+Output
+/run/gunicorn.sock: socket
+----------------------
+
+5.sudo journalctl -u gunicorn.socket    # <------ if error comes
+6.sudo systemctl status gunicorn
+-----------------
+Output
+● gunicorn.service - gunicorn daemon
+   Loaded: loaded (/etc/systemd/system/gunicorn.service; disabled; vendor preset: enabled)
+   Active: inactive (dead)
+------------------
+7. curl --unix-socket /run/gunicorn.sock localhost # it will return html code
+8. sudo systemctl status gunicorn  # check status
+9. sudo systemctl daemon-reload
+10.sudo systemctl restart gunicorn
