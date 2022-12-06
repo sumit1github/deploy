@@ -25,25 +25,12 @@ source env/bin/activate
 cd project
 pip install -r requirments.txt
 
-# setup gunicorn 
+# setup gunicorn
 pip install gunicorn
-mkdir conf #creatign a conf folder where manage.py is located
-sudo nano conf/gunicorn_config.py
-@@ see the gunicornsetup file
+gunicorn --bind 0.0.0.0:8000 project_name.wsgi # run it for testing
+@ follow gunicorn setup file
 
-now activate the virtual env
-go inside main folder where the manage.py is present
-run command :
-              gunicorn -c conf/gunicorn_config.py project.wsgi
-it will run the server, we test IP:8000
-
-*****important*****
-we have to keep running it in background dontpress ctrl+c
-**press ctrl+z
-bg # to verify gunicorn is running on background or not
-
-
-setup nginx
+#setup nginx
 
 sudo service nginx start
 sudo nano /etc/nginx/sites-available/project_name
