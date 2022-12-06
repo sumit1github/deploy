@@ -1,19 +1,29 @@
- server {
+ 1. sudo nano /etc/nginx/sites-available/project_name
+ -----------------------------
+ 
+server {
     listen 80;
-    server_name 67.205.186.66;
-
-    location /media  {
-        alias /home/sumit/testing/media;  # your Django project's media files - amend as required
-    }
-
-    location /static {
-        alias /home/sumit/testing/staticfiles; # your Django project's static files - amend as required
-    }
+    server_name 100.25.36, abcd.com;
 
     location = /favicon.ico { access_log off; log_not_found off; }
+    
+    #location /static/ {
+    #   root /home/sammy/myprojectdir;  comment it if you want server the static file from django
+    #}
 
     location / {
-        proxy_pass http://67.205.186.66:8000;
+        include proxy_params;
+        proxy_pass http://unix:/run/gunicorn.sock;
     }
 }
+----------------------------------
+
+2. sudo ln -s /etc/nginx/sites-available/myproject /etc/nginx/sites-enabled
+
+3. sudo nginx -t ## for checking nginx systex
+4. sudo systemctl restart nginx
+5. sudo ufw allow 'Nginx Full'
+ 
+6. sudo tail -F /var/log/nginx/error.log  # for nginx error logs
+7.
 
