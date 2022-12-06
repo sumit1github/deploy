@@ -43,3 +43,8 @@ sudo nginx -t #check nginx syntex error
 sudo ufw allow 'Nginx Full'
 sudo systemtl restart nginx
 
+
+## reastart server
+sudo systemctl daemon-reload
+sudo systemctl restart gunicorn
+sudo systemctl restart nginx
