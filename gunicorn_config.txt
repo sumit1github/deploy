@@ -22,7 +22,7 @@ Requires=gunicorn.socket
 After=network.target
 
 [Service]
-User=ubuntu        # for digital ocen create a new user
+User=ubuntu
 Group=www-data
 WorkingDirectory=/home/user_name/myprojectdir/project_name
 ExecStart=/home/sammy/myprojectdir/env/bin/gunicorn \
