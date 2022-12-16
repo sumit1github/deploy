@@ -3,7 +3,7 @@
  
 server {
     listen 80;
-    server_name 100.25.36, abcd.com;
+    server_name 100.25.36;
 
     location = /favicon.ico { access_log off; log_not_found off; }
     
