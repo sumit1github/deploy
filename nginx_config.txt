@@ -4,6 +4,7 @@
 server {
     listen 80;
     server_name 100.25.36;
+    # in case of domain---> server_name domain.com;
 
     location = /favicon.ico { access_log off; log_not_found off; }
     
