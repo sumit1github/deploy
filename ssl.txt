@@ -1,0 +1,36 @@
+------------------------------------------------------ paid ssl-----------------------------------
+1. buy ssl from vendor
+  you will get i> ssl certificate(code) 2. privatekey (.key file)
+
+2. cd /etc/nginx/sites-available
+  i> sudo nano project_name.key     # paste the secret key code
+  ii> sudo nano domain.com.cer     # paste the certificate code
+  iii> sudo nano intermideate.cer  # find intermideate base64 code from vendor's site
+  iv> sudo nano bundle.cer       #copy the code of domain.com.cer and intermediate.cer and paste it in bundle one by one
+
+3. sudo nano /etc/nginx/sites-available/project_name
+
+
+
+server {
+    listen   80;
+    listen   [::]:80;
+
+    listen 443 default ssl;
+    ssl on;
+    ssl_certificate /etc/nginx/bundle.cer;   ##path to bundle.cer
+    ssl_certificate_key /etc/nginx/sites-available/hv_ssl.key; ###path to secret key
+
+    server_name hv.assiduusinc.com www.hv.assiduusinc.com;
+
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/run/gunicorn.sock;
+    }
+}
+
+
+4.sudo systemctl daemon-reload & sudo systemctl restart gunicorn & sudo systemctl restart nginx
