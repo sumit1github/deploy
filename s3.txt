@@ -1,3 +1,52 @@
+-------------------------------------------------------------- aws s3 setup ----------------------------------------
+
+# create s3 and allow public access
+# go to permission and add bucket policy
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:*",
+            "Resource": [
+                "arn:aws:s3:::bucket_name",
+                "arn:aws:s3:::bucket_name/*"
+            ]
+        }
+    ]
+}
+
+
+# go down on same permission page and edit the cors policy
+[
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "GET",
+            "HEAD"
+        ],
+        "AllowedOrigins": [
+            "*"
+        ],
+        "ExposeHeaders": []
+    }
+]
+
+# now create a IAM user to access the bucket
+
+$ search IAM > users > create user > enter name > Set permissions > Attach policies directly
+$ search   "s3 full access" and check and submit
+$ user list > security credential > create access key
+$ use access key in project
+
+
+
 pip install boto3
 pip install django-storages
 
@@ -43,6 +92,8 @@ else:
     }
 
     AWS_LOCATION = 'static'
+    AWS_QUERYSTRING_AUTH=False
+    AWS_S3_FILE_OVERWRITE = True
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 
