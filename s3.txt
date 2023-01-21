@@ -1,0 +1,50 @@
+pip install boto3
+pip install django-storages
+
+
+# INSTALLED_APPS
+
+'storages',
+
+
+# create storage_backends.py in same folder where settings.py is located
+
+from storages.backends.s3boto3 import S3Boto3Storage
+
+class MediaStorage(S3Boto3Storage):
+    location = 'media'
+    file_overwrite = False
+    
+    
+
+# settings.py ------------------------------------------------------------------
+
+STATIC_URL = '/static/'
+
+PRODUCTION =False
+
+if PRODUCTION == False:
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+    STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'staticfiles')
+    ]
+
+else:
+
+    AWS_ACCESS_KEY_ID = 'AKIAIT2Z5TDYPX3ARJBA'
+    AWS_SECRET_ACCESS_KEY = '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'
+    AWS_STORAGE_BUCKET_NAME = 'sibtc-assets'
+    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+
+    AWS_LOCATION = 'static'
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+
+    DEFAULT_FILE_STORAGE = 'mysite.storage_backends.MediaStorage' 
+    #end  settings.py ------------------------------------------------------------------
