@@ -1,0 +1,4 @@
+docker run -it --name redis-container -d redis
+docker logs redis-container
+docker exec -it redis-container bash
+sudo docker run --name redis-container -p 6379:6379 -d redis
