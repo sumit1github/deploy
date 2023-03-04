@@ -99,3 +99,19 @@ else:
 
     DEFAULT_FILE_STORAGE = 'mysite.storage_backends.MediaStorage' 
     #end  settings.py ------------------------------------------------------------------
+    
+    
+**************************************************** important **********************************************
+when we are using s3, we can not delete a file from s3 bucket using os.remove(obj.file.path)
+
+so now the code is :
+    data = Document.objects.get(id=eid)
+    # image delete from systems
+    # ====================================
+    if data.image:
+        if len(data.image) > 0:
+            data.image.delete(save=False)   #<----------------
+
+    # =============================================
+    data.delete()
+    return redirect("/home/emp_document_add/{}".format(id))
