@@ -37,3 +37,15 @@ erver {
 
 
 4.sudo systemctl daemon-reload & sudo systemctl restart gunicorn & sudo systemctl restart nginx
+
+
+*------------------------------------------------ generate sll from .pfx file --------------------------------------------------
+# terminal
+
+openssl pkcs12 -in WildCard.pfx -out bundle.cer -nokeys
+openssl pkcs12 -in WildCard.pfx -out hv_ssl.key -nocerts -nodes
+
+cat bundle.cer hv_ssl.key > certificate.pem       <--- not required
+
+now follow the nginx setting....
+
