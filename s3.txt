@@ -82,9 +82,10 @@ if PRODUCTION == False:
 
 else:
 
-    AWS_ACCESS_KEY_ID = 'AKIAIT2Z5TDYPX3ARJBA'
-    AWS_SECRET_ACCESS_KEY = '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'
-    AWS_STORAGE_BUCKET_NAME = 'sibtc-assets'
+    AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = os.environ.get("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_REGION_NAME = "ap-south-1"
     AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
     AWS_S3_OBJECT_PARAMETERS = {
@@ -92,12 +93,11 @@ else:
     }
 
     AWS_LOCATION = 'static'
-    AWS_QUERYSTRING_AUTH=False
-    AWS_S3_FILE_OVERWRITE = True
     STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
     STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
-
-    DEFAULT_FILE_STORAGE = 'mysite.storage_backends.MediaStorage' 
+    AWS_QUERYSTRING_AUTH=False
+    AWS_S3_FILE_OVERWRITE = True
+    DEFAULT_FILE_STORAGE = 'helo.storage_backends.MediaStorage' 
     #end  settings.py ------------------------------------------------------------------
     
     
