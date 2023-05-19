@@ -104,14 +104,21 @@ else:
 **************************************************** important **********************************************
 when we are using s3, we can not delete a file from s3 bucket using os.remove(obj.file.path)
 
+from django.conf import settings
+from django.core.files.storage import default_storage
+
 so now the code is :
     data = Document.objects.get(id=eid)
-    # image delete from systems
-    # ====================================
-    if data.image:
-        if len(data.image) > 0:
-            data.image.delete(save=False)   #<----------------
+    
+    if data.image and data.image.name:
+        # Delete from the local system
+        data.image.delete(save=False)
 
-    # =============================================
+        # Delete from S3 (if applicable)
+        if settings.DEFAULT_FILE_STORAGE == 'storages.backends.s3boto3.S3Boto3Storage':
+            s3_storage = default_storage
+            if s3_storage.exists(data.image.name):
+                s3_storage.delete(data.image.name)
+
+
     data.delete()
-    return redirect("/home/emp_document_add/{}".format(id))
