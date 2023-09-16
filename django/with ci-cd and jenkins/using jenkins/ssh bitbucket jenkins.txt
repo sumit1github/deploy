@@ -1,0 +1,46 @@
+normally sudo commands will not execute directly in .sh file. Have to permission for jenkins user
+# if we are using aws, there wil 2 users  1. ubuntu  2. jenkins
+    sudo visudo
+        search for   "  root    ALL=(ALL:ALL) ALL  "
+        paste the line after it  "  jenkins ALL=(ALL) NOPASSWD: ALL  ""
+ 
+ 
+ 
+# connect with the server using terminal
+    sudo su -s /bin/bash jenkins
+    ssh-keygen
+    # enter enter
+    
+    --> now you can check where my ssh keys as stored. You can go usign cd command
+    
+    
+    ****** very important
+    need to runthis command in ubuntu termial to add the fingerprint
+    
+    ssh -T git@bitbucket.org
+   
+    
+# id_rsa and id_rsa.pub will be there
+
+  1. cat id_rsa           ----> private key
+  
+  # go to Manage Jenkins –> configure credentials –> credentials –> system –>Add credentials.
+      
+      1. change the credentials “kind” to “SSH Username with private key”
+      2.username: bitbucket's username
+      3. paste private key
+      4. levae pass phrase empty is not set during ssh ceation
+      
+  2. cat id_rsa.pub
+  
+  # go to bitbucket and try to create shh key and paste the public key
+  
+  
+next steps
+
+1. copy the ssh url from bit-bucket
+2. paste it in the  jenkins > project > config > git url
+      select the created credential
+
+************** Boom *************
+      

@@ -1,0 +1,44 @@
+## webhook should looks like
+          to create webhook, go to remo setting and webhook
+          paste the below link and check all the read operations
+          
+http://{userame}:{password}@{jenkins url and port}/job/{project_name}/build?token={token}
+
+**note: for special caracter in password (eg: @1)
+          *after filling data in the url, copy the url and paste it in browser url(**dont hit enter).
+          *again copy from browser and paste in webhook.
+username and password:
+          when you login to jenkins dashboard, there you can get option ***manage-users(under Security). 
+          you have to create your jenkins user with password.
+          
+          ** initially it will not visible, we have to enable it(manage-user enable).
+
+token:
+          Dashboard > hvproject > Configuration > General
+          
+          inside Build Triggers we have to check ***Trigger builds remotely (e.g., from scripts).
+          it will ask token, you can pust anything. Same should be used in webhook.
+          
+          ** initially it will not visible, we have to enable it.
+          
+          
+manage-user enable:
+          go to Dashboard > Manage Jenkins > Configure Global Security
+          
+        1. activate security using jenkins own user-database
+        2. DO NOT activate matrix-based security yet.(*******************)
+        3. Save!
+        4. go to "manage jenkins" -> "manage users" (now it should be visible)
+        5. create a user. use only lowercase letters for the username otherwise you will get problems on restart of jenkins.
+        6. now go back to "manage jenkins" -> global security
+        7. activate matrix-based security
+        8. enter the name of your new user and give him all permissions using the button at the end of the row.
+        9. Save
+        10. now you should be able to login.
+          
+          
+trigger builds remotely enable":
+        * go to Dashboard > Manage Jenkins > Security
+        * Jenkins' own user database (uncheck Allow users to sign up)
+        * Authorization: Logged-in users can do anything
+        * it will appear

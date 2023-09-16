@@ -1,0 +1,80 @@
+pipeline{
+    agent any
+
+    environment {
+        pipeline_name = 'pipeline_name_'
+        jenkins_dir = '/var/lib/jenkins/workspace/'
+        ubuntu_user_name = 'root or ubuntu'
+
+
+        ip_address = 'public_ip_address'
+        domain_name = 'domian_name'
+
+        database_name = 'data_base_name'
+        postgres_password = 'postgres_user_password'
+    }
+    stages {
+        // soft build : requirement.txt, collectstatic, migrate
+        
+        // stage('soft build'){
+        //     steps  {
+        //         sh "chmod +x cicd/soft_build/entrypoint.sh"
+        //         sh "cicd/soft_build/./entrypoint.sh"
+        //     }
+        // }
+
+        //--------------------------------------------------------------------------------------------------
+        // hard build : to setup the project first time
+
+        stage('Entrypoint'){
+            steps  {
+                sh "chmod +x cicd/hard_build/entrypoint.sh"
+                sh "cicd/hard_build/./entrypoint.sh"
+            }
+        }
+
+        stage('Deploy Secrets'){
+            steps  {
+                sh "chmod +x cicd/hard_build/secrects_deploy.sh"
+                sh "cicd/hard_build/./secrects_deploy.sh"
+            }
+        }
+
+        stage('Setup DataBase'){
+            steps  {
+                sh "chmod +x cicd/hard_build/database.sh"
+                sh "cicd/hard_build/./database.sh"
+            }
+        }
+
+        stage('Setup Gunicorn Setup'){
+            steps {
+                sh "chmod +x cicd/hard_build/gunicorn.sh"
+                sh "cicd/hard_build/./gunicorn.sh"
+
+            }
+        }
+
+        stage('setup NGINX'){
+            steps {
+                sh "chmod +x cicd/hard_build/nginx.sh"
+                sh "cicd/hard_build/./nginx.sh"
+            }
+        }
+
+        stage('setup Celery'){
+            steps {
+                sh "chmod +x cicd/hard_build/celery.sh"
+                sh "cicd/hard_build/./celery.sh"
+            }
+        }
+
+        stage('soft build'){
+            steps  {
+                sh "chmod +x cicd/soft_build/entrypoint.sh"
+                sh "cicd/soft_build/./entrypoint.sh"
+            }
+        }
+
+    }
+}
