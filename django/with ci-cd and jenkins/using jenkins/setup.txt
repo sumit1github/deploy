@@ -1,0 +1,104 @@
+first create your jenkins file and other files
+
+
+* login to your cloud and openterminal
+
+* install java
+      sudo apt-get install openjdk-11-jre
+      
+      
+      
+ * install jenkins
+
+      wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+      
+      sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 5BA31D57EF5975CA
+        
+      sudo sh -c 'echo deb https://pkg.jenkins.io/debian-stable binary/ > \/etc/apt/sources.list.d/jenkins.list'
+      
+      sudo apt-get update
+      sudo apt-get install jenkins
+      
+      
+      
+      
+ * login to the jenkins dashboard
+      
+      publicip:8080   open it to browser
+      
+      it will show the location of your password
+          sudo nano location
+          copy the password and login
+          
+          
+ 
+ * create your own user 
+        1. activate security using jenkins own user-database
+        2. DO NOT activate matrix-based security yet.(*******************)
+        3. Save!
+        4. go to "manage jenkins" -> "manage users" (now it should be visible)
+        5. create a user. use only lowercase letters for the username otherwise you will get problems on restart of jenkins.
+        6. now go back to "manage jenkins" -> global security
+        7. activate matrix-based security
+        8. enter the name of your new user and give him all permissions using the button at the end of the row.
+        9. Save
+        10. now you should be able to login.
+        
+        
+* create app-password in bitbucket repo
+    bit-bucket has stopped the username and password authentication. You need a app password.
+        
+        go to https://bitbucket.org/account/settings/   or click to profile > personal setting > app password
+        create and check permission > Repositories > read
+        save the password somewhere-else
+        we are going to use it next
+ 
+ 
+* allow webhook settings
+      Build Triggers > Authentication Token
+      
+      add any string as token
+      
+      *** if the option is not present, then go to webhook.txt and follow "trigger builds remotely enable"
+        
+
+** needed settings for running sudo commands
+    normally sudo commands will not execute directly in .sh file. Have to permission for jenkins user
+    # if we are using aws, there wil 2 users  1. ubuntu  2. jenkins
+        sudo visudo
+            search for   "  root    ALL=(ALL:ALL) ALL  "
+            paste the line after it  "  jenkins ALL=(ALL) NOPASSWD: ALL  ""
+        
+        
+
+* now setup pipeline
+    pipeline is the way from the code will be pulled.
+        
+        go to  Dashboard > hvproject > Configuration > pipeline > Definition
+        select "Pipeline script from SCM"
+        
+        scm : select git
+        
+        Repositories:
+            go to bit bucket and the https url
+                url: https://x-token-auth:{app_password}@bitbucket.org/workspacename/porject_name.git
+                it this case no need to select or create credential
+            
+            Branches to build
+                 select bitbucket branch_name, from where it pull the code.
+                 
+ * build
+        go project details
+        enter build button
+            it will setup your database, gunicorn, nginx and others
+        
+* webhook trigger
+      webhook is a link to the jenkins url, when it will be hitted by bitbucket after push the code. The build will start automatically in jenkins.
+      
+            **note : First to prevent " 403 no valid crumb " inside the webhook. we need to disable the jenkins CSRF.
+            
+            go to " Dashboard > Manage Jenkins > Script Console "
+            run "  hudson.security.csrf.GlobalCrumbIssuerConfiguration.DISABLE_CSRF_PROTECTION = true  "
+            output : true
+            
+            now go to the webhook.txt
