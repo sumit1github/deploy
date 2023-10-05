@@ -12,5 +12,7 @@ print(get_random_secret_key())
 
 from dotenv import load_dotenv
 load_dotenv()
+import ast
 
 SECRET_KEY = str(os.getenv('SECRET_KEY'))
+DEBUG = (ast.literal_eval(os.getenv('DEBUG')))
